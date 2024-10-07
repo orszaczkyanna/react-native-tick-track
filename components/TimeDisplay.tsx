@@ -6,8 +6,11 @@ const TimeDisplay = ({ children }: { children: ReactNode }) => {
   return (
     // <Text className="text-foreground text-[10svh] font-monregular">
     <Text
-      className="text-foreground font-monregular text-center"
-      style={{ fontSize: moderateScale(64) }}
+      className="text-foreground-100 font-inconsolata text-center" // monospace
+      style={{ fontSize: moderateScale(76) }}
+
+      // className="text-foreground font-monregular text-center"
+      // style={{ fontSize: moderateScale(64) }}
     >
       {children}
     </Text>

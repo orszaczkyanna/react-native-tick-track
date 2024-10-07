@@ -10,6 +10,7 @@ const RootLayout = () => {
   const [loaded, error] = useFonts({
     "Montserrat-Medium": require("../assets/fonts/Montserrat-Medium.ttf"),
     "Montserrat-Regular": require("../assets/fonts/Montserrat-Regular.ttf"),
+    "Inconsolata-Regular": require("../assets/fonts/Inconsolata-Regular.ttf"),
   });
 
   useEffect(() => {
