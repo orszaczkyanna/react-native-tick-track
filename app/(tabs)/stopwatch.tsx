@@ -3,25 +3,34 @@ import { View } from "react-native";
 import Container from "@/components/Container";
 import TimeDisplay from "@/components/TimeDisplay";
 import ControlButton from "@/components/ControlButton";
+import { Audio } from "expo-av";
 
 const Stopwatch = () => {
   const [isRunning, setRunning] = useState<boolean>(false);
   const [elapsedTime, setElapsedTime] = useState<number>(0); // Date.now() - startTimeRef.current
   const startTimeRef = useRef<number>(0); // Date.now() - elapsedTime
-  const intervalIdRef = useRef<NodeJS.Timeout | null>(null); // setInterval(callback, milliseconds)
+  const timeoutIdRef = useRef<NodeJS.Timeout | null>(null); // setInterval(callback, milliseconds)
 
-  // Start and stop the interval
   useEffect(() => {
     if (isRunning) {
-      // Start the interval that updates the elapsed time every 100ms
-      intervalIdRef.current = setInterval(() => {
+      // Recursive Function: a function that calls itself
+      const tick = () => {
+        // Update elapsed time
         setElapsedTime(Date.now() - startTimeRef.current);
-      }, 100);
+
+        // Play ticking sound
+        playSound();
+
+        // Re-schedule the timeout for the next tick
+        timeoutIdRef.current = setTimeout(tick, 1000);
+      };
+
+      tick();
     }
 
-    // Cleanup Function: clear the interval
+    // Cleanup Function: clear the timeout
     return () => {
-      if (intervalIdRef.current) clearInterval(intervalIdRef.current);
+      if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
     };
   }, [isRunning]);
 
@@ -73,6 +82,45 @@ const Stopwatch = () => {
     return `${hours}:${minutes}:${seconds}`;
     // return `${hours}:${minutes}:${seconds}:${milliseconds}`;
   };
+
+  //  ---- Audio from expo-av ----
+  const [soundAudio, setSoundAudio] = useState<Audio.Sound>();
+
+  const initializeSound = async (): Promise<Audio.Sound> => {
+    console.log("Loading Sound");
+    const { sound } = await Audio.Sound.createAsync(
+      require("@/assets/audio/tick.wav")
+    );
+    setSoundAudio(sound);
+    return sound;
+  };
+
+  const playSound = async (): Promise<void> => {
+    try {
+      // If there is soundAudio then use it, otherwise initialize the sound
+      // let sound = soundAudio ? soundAudio : await initializeSound();
+      let sound = soundAudio || (await initializeSound());
+      const status = await sound.getStatusAsync();
+
+      if (status.isLoaded) {
+        await sound.setPositionAsync(0); // Ensure playback starts from the beginning
+        await sound.playAsync();
+      } else {
+        sound = await initializeSound();
+        await sound.setPositionAsync(0);
+        await sound.playAsync();
+      }
+    } catch (error) {
+      console.error("Error while trying to play sound\n", error);
+    }
+  };
+
+  useEffect(() => {
+    // Cleanup Function
+    return () => {
+      soundAudio?.unloadAsync();
+    };
+  }, [soundAudio]);
 
   return (
     <Container>
