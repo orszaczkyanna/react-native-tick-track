@@ -86,41 +86,40 @@ const Stopwatch = () => {
   //  ---- Audio from expo-av ----
   const [soundAudio, setSoundAudio] = useState<Audio.Sound>();
 
-  const initializeSound = async (): Promise<Audio.Sound> => {
-    console.log("Loading Sound");
-    const { sound } = await Audio.Sound.createAsync(
-      require("@/assets/audio/tick.wav")
-    );
-    setSoundAudio(sound);
-    return sound;
-  };
+  // Load the sound once when the component mounts
+  useEffect(() => {
+    const loadSound = async (): Promise<void> => {
+      if (!soundAudio) {
+        console.log("Loading Sound");
+        const { sound } = await Audio.Sound.createAsync(
+          require("@/assets/audio/tick.wav")
+        );
+        setSoundAudio(sound);
+      }
+    };
 
+    loadSound();
+
+    // Cleanup Function
+    return () => {
+      soundAudio?.unloadAsync();
+    };
+  }, []);
+
+  // Play ticking sound
   const playSound = async (): Promise<void> => {
     try {
-      // If there is soundAudio then use it, otherwise initialize the sound
-      // let sound = soundAudio ? soundAudio : await initializeSound();
-      let sound = soundAudio || (await initializeSound());
-      const status = await sound.getStatusAsync();
-
-      if (status.isLoaded) {
-        await sound.setPositionAsync(0); // Ensure playback starts from the beginning
-        await sound.playAsync();
-      } else {
-        sound = await initializeSound();
-        await sound.setPositionAsync(0);
-        await sound.playAsync();
+      if (soundAudio) {
+        const status = await soundAudio.getStatusAsync();
+        if (status.isLoaded) {
+          await soundAudio.setPositionAsync(0); // Ensure playback starts from the beginning
+          await soundAudio.playAsync();
+        }
       }
     } catch (error) {
       console.error("Error while trying to play sound\n", error);
     }
   };
-
-  useEffect(() => {
-    // Cleanup Function
-    return () => {
-      soundAudio?.unloadAsync();
-    };
-  }, [soundAudio]);
 
   return (
     <Container>
