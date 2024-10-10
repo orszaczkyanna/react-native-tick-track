@@ -3,13 +3,16 @@ import { View } from "react-native";
 import Container from "@/components/Container";
 import TimeDisplay from "@/components/TimeDisplay";
 import ControlButton from "@/components/ControlButton";
-import { Audio } from "expo-av";
+
+import { useSoundContext } from "@/context/SoundContext";
 
 const Stopwatch = () => {
   const [isRunning, setRunning] = useState<boolean>(false);
   const [elapsedTime, setElapsedTime] = useState<number>(0); // Date.now() - startTimeRef.current
   const startTimeRef = useRef<number>(0); // Date.now() - elapsedTime
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null); // setInterval(callback, milliseconds)
+
+  const { playSound } = useSoundContext();
 
   useEffect(() => {
     if (isRunning) {
@@ -81,44 +84,6 @@ const Stopwatch = () => {
 
     return `${hours}:${minutes}:${seconds}`;
     // return `${hours}:${minutes}:${seconds}:${milliseconds}`;
-  };
-
-  //  ---- Audio from expo-av ----
-  const [soundAudio, setSoundAudio] = useState<Audio.Sound>();
-
-  // Load the sound once when the component mounts
-  useEffect(() => {
-    const loadSound = async (): Promise<void> => {
-      if (!soundAudio) {
-        console.log("Loading Sound");
-        const { sound } = await Audio.Sound.createAsync(
-          require("@/assets/audio/tick.wav")
-        );
-        setSoundAudio(sound);
-      }
-    };
-
-    loadSound();
-
-    // Cleanup Function
-    return () => {
-      soundAudio?.unloadAsync();
-    };
-  }, []);
-
-  // Play ticking sound
-  const playSound = async (): Promise<void> => {
-    try {
-      if (soundAudio) {
-        const status = await soundAudio.getStatusAsync();
-        if (status.isLoaded) {
-          await soundAudio.setPositionAsync(0); // Ensure playback starts from the beginning
-          await soundAudio.playAsync();
-        }
-      }
-    } catch (error) {
-      console.error("Error while trying to play sound\n", error);
-    }
   };
 
   return (
