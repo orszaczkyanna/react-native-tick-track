@@ -3,17 +3,17 @@ import {
   useContext,
   useEffect,
   useState,
-  //   Dispatch,
-  //   SetStateAction,
+  Dispatch,
+  SetStateAction,
   ReactNode,
 } from "react";
 import { Audio } from "expo-av";
 
 // ---- 1. A Context által megosztott adatok típusának definiálása ----
 interface SoundContextType {
-  //   soundAudio: Audio.Sound | undefined;
-  //   setSoundAudio: Dispatch<React.SetStateAction<Audio.Sound | undefined>>;
   playSound: () => Promise<void>;
+  isMuted: boolean;
+  setMuted: Dispatch<SetStateAction<boolean>>;
 }
 
 // ---- 2. Context létrehozása ----
@@ -32,6 +32,7 @@ export const useSoundContext = () => {
 // ---- 4. A Provider komponens definiálása, amely a Context értékeit biztosítja ----
 const SoundProvider = ({ children }: { children: ReactNode }) => {
   const [soundAudio, setSoundAudio] = useState<Audio.Sound>();
+  const [isMuted, setMuted] = useState<boolean>(false);
 
   // Load the sound once when the component mounts
   useEffect(() => {
@@ -70,7 +71,7 @@ const SoundProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <SoundContext.Provider value={{ playSound }}>
+    <SoundContext.Provider value={{ playSound, isMuted, setMuted }}>
       {children}
     </SoundContext.Provider>
   );

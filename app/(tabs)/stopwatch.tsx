@@ -5,6 +5,7 @@ import TimeDisplay from "@/components/TimeDisplay";
 import ControlButton from "@/components/ControlButton";
 
 import { useSoundContext } from "@/context/SoundContext";
+import MuteButton from "@/components/MuteButton";
 
 const Stopwatch = () => {
   const [isRunning, setRunning] = useState<boolean>(false);
@@ -12,7 +13,7 @@ const Stopwatch = () => {
   const startTimeRef = useRef<number>(0); // Date.now() - elapsedTime
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null); // setInterval(callback, milliseconds)
 
-  const { playSound } = useSoundContext();
+  const { playSound, isMuted } = useSoundContext();
 
   useEffect(() => {
     if (isRunning) {
@@ -21,8 +22,10 @@ const Stopwatch = () => {
         // Update elapsed time
         setElapsedTime(Date.now() - startTimeRef.current);
 
-        // Play ticking sound
-        playSound();
+        // Play the ticking sound if it's not muted
+        if (!isMuted) {
+          playSound();
+        }
 
         // Re-schedule the timeout for the next tick
         timeoutIdRef.current = setTimeout(tick, 1000);
@@ -35,7 +38,7 @@ const Stopwatch = () => {
     return () => {
       if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
     };
-  }, [isRunning]);
+  }, [isRunning, isMuted]);
 
   // Start the stopwatch
   const start = (): void => {
@@ -88,6 +91,7 @@ const Stopwatch = () => {
 
   return (
     <Container>
+      <MuteButton />
       <TimeDisplay>{displayTime()}</TimeDisplay>
       <View className="flex-row mt-6">
         <ControlButton
