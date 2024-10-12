@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useSoundContext } from "@/context/SoundContext";
+import { useIsFocused } from "@react-navigation/native";
 import Container from "@/components/Container";
 import TimeDisplay from "@/components/TimeDisplay";
 import MuteButton from "@/components/MuteButton";
 
 const Clock = () => {
   const { playSound, isMuted } = useSoundContext();
+  const isFocused = useIsFocused();
 
   const [currentTime, setCurrentTime] = useState<number>(Date.now());
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null); // Initialize with null to prevent errors during cleanup checks
@@ -15,7 +17,7 @@ const Clock = () => {
     const tick = () => {
       setCurrentTime(Date.now());
 
-      if (!isMuted) {
+      if (!isMuted && isFocused) {
         playSound();
       }
 
@@ -27,7 +29,7 @@ const Clock = () => {
     return () => {
       if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
     };
-  }, [isMuted]);
+  }, [isMuted, isFocused]);
 
   // Format time to a two-digit string
   const formatTime = (time: number): string => {

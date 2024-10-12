@@ -5,6 +5,7 @@ import TimeDisplay from "@/components/TimeDisplay";
 import ControlButton from "@/components/ControlButton";
 
 import { useSoundContext } from "@/context/SoundContext";
+import { useIsFocused } from "@react-navigation/native";
 import MuteButton from "@/components/MuteButton";
 
 const Stopwatch = () => {
@@ -14,6 +15,7 @@ const Stopwatch = () => {
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null); // setInterval(callback, milliseconds)
 
   const { playSound, isMuted } = useSoundContext();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     if (isRunning) {
@@ -23,7 +25,7 @@ const Stopwatch = () => {
         setElapsedTime(Date.now() - startTimeRef.current);
 
         // Play the ticking sound if it's not muted
-        if (!isMuted) {
+        if (!isMuted && isFocused) {
           playSound();
         }
 
@@ -38,7 +40,7 @@ const Stopwatch = () => {
     return () => {
       if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
     };
-  }, [isRunning, isMuted]);
+  }, [isRunning, isMuted, isFocused]);
 
   // Start the stopwatch
   const start = (): void => {
