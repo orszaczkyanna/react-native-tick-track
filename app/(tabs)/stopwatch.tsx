@@ -1,42 +1,41 @@
 import { useState, useEffect, useRef } from "react";
+import { useSoundContext } from "@/context/SoundContext";
+import { useIsFocused } from "@react-navigation/native";
 import { displayFormattedTime } from "@/utils/timeUtils";
 import Container from "@/components/Container";
 import TimeDisplay from "@/components/TimeDisplay";
 import ControlButtonGroup from "@/components/ControlButtonGroup";
-
-import { useSoundContext } from "@/context/SoundContext";
-import { useIsFocused } from "@react-navigation/native";
 import MuteButton from "@/components/MuteButton";
 
 const Stopwatch = () => {
-  const [isRunning, setRunning] = useState<boolean>(false);
-  const [elapsedTime, setElapsedTime] = useState<number>(0); // Date.now() - startTimeRef.current
-  const startTimeRef = useRef<number>(0); // Date.now() - elapsedTime
-  const timeoutIdRef = useRef<NodeJS.Timeout | null>(null); // setInterval(callback, milliseconds)
-
   const { playSound, isMuted } = useSoundContext();
   const isFocused = useIsFocused();
 
+  const [isRunning, setRunning] = useState<boolean>(false);
+  const [elapsedTime, setElapsedTime] = useState<number>(0); // now - start
+  const startTimeRef = useRef<number>(0); // now - elapsed
+  const timeoutIdRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Update the elapsed time when the stopwatch is running
   useEffect(() => {
     if (isRunning) {
-      // Recursive Function: a function that calls itself
       const tick = () => {
-        // Update elapsed time
+        // Update the elapsed time
         setElapsedTime(Date.now() - startTimeRef.current);
 
-        // Play the ticking sound if it's not muted
+        // Play the ticking sound if applicable
         if (!isMuted && isFocused) {
           playSound();
         }
 
-        // Re-schedule the timeout for the next tick
+        // Schedule the next tick
         timeoutIdRef.current = setTimeout(tick, 1000);
       };
 
       tick();
     }
 
-    // Cleanup Function: clear the timeout
+    // Cleanup function to clear the timeout
     return () => {
       if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
     };
