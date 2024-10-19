@@ -4,6 +4,7 @@ import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
 import { Colors } from "@/constants/Colors";
 import SoundProvider from "@/context/SoundContext";
+import TimerProvider from "@/context/TimerContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,11 +27,13 @@ const RootLayout = () => {
 
   return (
     <SoundProvider>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
-      {/* Global StatusBar configuration for the entire application */}
-      <StatusBar style="light" backgroundColor={Colors.primaryBackground} />
+      <TimerProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+        {/* Global StatusBar configuration for the entire application */}
+        <StatusBar style="light" backgroundColor={Colors.primaryBackground} />
+      </TimerProvider>
     </SoundProvider>
   );
 };

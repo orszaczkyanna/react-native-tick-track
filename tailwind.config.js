@@ -21,7 +21,7 @@ module.exports = {
         foreground: {
           DEFAULT: "#E8E8E8",
           100: "#E1E1E1",
-          // 200: "#C9C9C9",
+          200: "#89869F",
         },
       },
       fontFamily: {

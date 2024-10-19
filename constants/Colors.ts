@@ -3,6 +3,7 @@ export const Colors = {
   secondaryBackground: "#201E37",
   primaryAccent: "#1B75DE",
   secondaryAccent: "#004699",
-  primaryForeground: "#FBFBFB",
+  primaryForeground: "#FBFBFB", // text, icons
   secondaryForeground: "#E1E1E1",
+  fadedForeground: "#89869F",
 };

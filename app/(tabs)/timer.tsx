@@ -1,21 +1,29 @@
 import { useState, useEffect, useRef } from "react";
+import { Pressable } from "react-native";
+import { useTimerContext } from "@/context/TimerContext";
 import { useSoundContext } from "@/context/SoundContext";
 import { useIsFocused } from "@react-navigation/native";
 import { displayFormattedTime } from "@/utils/timeUtils";
 import Container from "@/components/Container";
 import TimeDisplay from "@/components/TimeDisplay";
+import TimeInput from "@/components/TimeInput";
 import ControlButtonGroup from "@/components/ControlButtonGroup";
 import MuteButton from "@/components/MuteButton";
 
 const Timer = () => {
+  const { showTimeInput, setShowTimeInput, inputTime } = useTimerContext();
   const { playSound, isMuted } = useSoundContext();
   const isFocused = useIsFocused();
 
   const [isRunning, setRunning] = useState<boolean>(false);
-  const [inputTime, setInputTime] = useState<number>(30 * 1000);
   const [remainingTime, setRemainingTime] = useState<number>(inputTime); // finish - now
   const finishTimeRef = useRef<number>(0); // now + remaining
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Set the remaining time when the input time changes
+  useEffect(() => {
+    setRemainingTime(inputTime);
+  }, [inputTime]);
 
   // Update the remaining time when the timer is running
   useEffect(() => {
@@ -49,6 +57,12 @@ const Timer = () => {
     };
   }, [isRunning, isMuted, isFocused]);
 
+  // Show the time input fields
+  const handleTimeDisplayPress = () => {
+    setShowTimeInput(true);
+    if (isRunning) setRunning(false);
+  };
+
   // Start the timer
   const start = (): void => {
     setRunning(true);
@@ -72,13 +86,21 @@ const Timer = () => {
   return (
     <Container>
       <MuteButton />
-      <TimeDisplay>{displayFormattedTime(remainingTime)}</TimeDisplay>
-      <ControlButtonGroup
-        isRunning={isRunning}
-        onStart={start}
-        onPause={pause}
-        onReset={reset}
-      />
+      {showTimeInput ? (
+        <TimeInput />
+      ) : (
+        <>
+          <Pressable onPress={handleTimeDisplayPress}>
+            <TimeDisplay>{displayFormattedTime(remainingTime)}</TimeDisplay>
+          </Pressable>
+          <ControlButtonGroup
+            isRunning={isRunning}
+            onStart={start}
+            onPause={pause}
+            onReset={reset}
+          />
+        </>
+      )}
     </Container>
   );
 };
