@@ -25,7 +25,6 @@ module.exports = {
         },
       },
       fontFamily: {
-        monregular: ["Montserrat-Regular"],
         monmedium: ["Montserrat-Medium"],
         inconsolata: ["Inconsolata-Regular"],
       },

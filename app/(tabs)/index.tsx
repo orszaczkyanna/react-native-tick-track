@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSoundContext } from "@/context/SoundContext";
 import { useIsFocused } from "@react-navigation/native";
 import Container from "@/components/Container";
-import TimeDisplay from "@/components/TimeDisplay";
+import TimeText from "@/components/TimeText";
 import MuteButton from "@/components/MuteButton";
 
 const Clock = () => {
@@ -21,10 +21,10 @@ const Clock = () => {
         playSound();
       }
 
-      timeoutIdRef.current = setTimeout(tick, 1000);
+      timeoutIdRef.current = setTimeout(tick, 1000 - (Date.now() % 1000));
     };
 
-    tick();
+    timeoutIdRef.current = setTimeout(tick, 1000 - (Date.now() % 1000));
 
     return () => {
       if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
@@ -49,7 +49,7 @@ const Clock = () => {
   return (
     <Container>
       <MuteButton />
-      <TimeDisplay>{displayTime()}</TimeDisplay>
+      <TimeText>{displayTime()}</TimeText>
     </Container>
   );
 };

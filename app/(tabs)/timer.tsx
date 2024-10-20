@@ -5,7 +5,7 @@ import { useSoundContext } from "@/context/SoundContext";
 import { useIsFocused } from "@react-navigation/native";
 import { displayFormattedTime } from "@/utils/timeUtils";
 import Container from "@/components/Container";
-import TimeDisplay from "@/components/TimeDisplay";
+import TimeText from "@/components/TimeText";
 import TimeInput from "@/components/TimeInput";
 import ControlButtonGroup from "@/components/ControlButtonGroup";
 import MuteButton from "@/components/MuteButton";
@@ -47,6 +47,7 @@ const Timer = () => {
         timeoutIdRef.current = setTimeout(tick, 1000 - (Date.now() % 1000));
       };
 
+      // Call the tick() function
       // Schedule the initial tick to align with the next whole second
       timeoutIdRef.current = setTimeout(tick, 1000 - (Date.now() % 1000));
     }
@@ -83,6 +84,11 @@ const Timer = () => {
     console.log("Reset");
   };
 
+  // Toggle between start and pause
+  const toggle = (): void => {
+    isRunning ? pause() : start();
+  };
+
   return (
     <Container>
       <MuteButton />
@@ -91,13 +97,13 @@ const Timer = () => {
       ) : (
         <>
           <Pressable onPress={handleTimeDisplayPress}>
-            <TimeDisplay>{displayFormattedTime(remainingTime)}</TimeDisplay>
+            <TimeText>{displayFormattedTime(remainingTime)}</TimeText>
           </Pressable>
           <ControlButtonGroup
-            isRunning={isRunning}
-            onStart={start}
-            onPause={pause}
-            onReset={reset}
+            cancelTitle="Reset"
+            confirmTitle={isRunning ? "Pause" : "Start"}
+            onCancel={reset}
+            onConfirm={toggle}
           />
         </>
       )}

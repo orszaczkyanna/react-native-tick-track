@@ -3,8 +3,8 @@ import { TextInput, View } from "react-native";
 import { moderateScale } from "react-native-size-matters";
 import { useTimerContext } from "@/context/TimerContext";
 import { Colors } from "@/constants/Colors";
-import TimeDisplay from "./TimeDisplay";
-import ControlButton from "./ControlButton";
+import TimeText from "./TimeText";
+import ControlButtonGroup from "./ControlButtonGroup";
 
 interface CustomInputProps {
   placeholder: string;
@@ -12,6 +12,8 @@ interface CustomInputProps {
 }
 
 const CustomInput = ({ placeholder, setValue }: CustomInputProps) => {
+  const inputSize: number = moderateScale(76);
+
   const validateAndSetValue = (text: string) => {
     let numericValue = Number(text); // if text isn't valid, numericValue will be NaN
     if (numericValue > 99) numericValue = 99;
@@ -25,9 +27,9 @@ const CustomInput = ({ placeholder, setValue }: CustomInputProps) => {
     <TextInput
       className="text-foreground-100 font-inconsolata text-center rounded-lg"
       style={{
-        fontSize: moderateScale(76),
-        width: moderateScale(88),
-        height: moderateScale(76),
+        fontSize: inputSize,
+        width: inputSize,
+        height: inputSize,
       }}
       placeholderTextColor={Colors.fadedForeground}
       placeholder={placeholder}
@@ -46,37 +48,32 @@ const TimeInput = () => {
 
   const cancel = () => {
     setShowTimeInput(false);
-    // console.log("Cancel");
+    console.log("Cancel Set Time");
   };
 
   const setTime = () => {
     const newTime = (hours * 3600 + minutes * 60 + seconds) * 1000;
+    if (newTime == 0) return;
     setInputTime(newTime);
     setShowTimeInput(false);
-    // console.log(`Set time to ${newTime}`);
+    console.log("Set Time");
   };
 
   return (
     <>
       <View className="flex-row items-center justify-center">
         <CustomInput placeholder="HH" setValue={setHours} />
-        <TimeDisplay>:</TimeDisplay>
+        <TimeText>:</TimeText>
         <CustomInput placeholder="MM" setValue={setMinutes} />
-        <TimeDisplay>:</TimeDisplay>
+        <TimeText>:</TimeText>
         <CustomInput placeholder="SS" setValue={setSeconds} />
       </View>
-      <View className="flex-row mt-6">
-        <ControlButton
-          title="Cancel"
-          containerStyles="bg-background-100"
-          onPress={cancel}
-        />
-        <ControlButton
-          title="Set" // Set / Confirm / Apply
-          containerStyles="bg-accent-100"
-          onPress={setTime}
-        />
-      </View>
+      <ControlButtonGroup
+        cancelTitle="Cancel"
+        confirmTitle="Set" // Set / Confirm / Apply
+        onCancel={cancel}
+        onConfirm={setTime}
+      />
     </>
   );
 };

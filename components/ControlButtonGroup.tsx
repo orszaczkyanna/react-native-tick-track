@@ -2,34 +2,29 @@ import { View } from "react-native";
 import ControlButton from "./ControlButton";
 
 interface ControlButtonGroupProps {
-  isRunning: boolean;
-  onReset: () => void;
-  onStart: () => void;
-  onPause: () => void;
+  cancelTitle: string;
+  confirmTitle: string;
+  onCancel: () => void;
+  onConfirm: () => void;
 }
 
 const ControlButtonGroup = ({
-  isRunning, // Indicates if the stopwatch/timer is currently running
-  onReset,
-  onStart,
-  onPause,
+  cancelTitle,
+  confirmTitle,
+  onCancel,
+  onConfirm,
 }: ControlButtonGroupProps) => {
-  // Toggle between start and pause
-  const toggle = (): void => {
-    isRunning ? onPause() : onStart();
-  };
-
   return (
     <View className="flex-row mt-6">
       <ControlButton
-        title="Reset"
+        title={cancelTitle}
         containerStyles="bg-background-100"
-        onPress={onReset}
+        onPress={onCancel}
       />
       <ControlButton
-        title={isRunning ? "Pause" : "Start"}
+        title={confirmTitle}
         containerStyles="bg-accent-100"
-        onPress={toggle}
+        onPress={onConfirm}
       />
     </View>
   );
