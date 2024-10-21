@@ -34,8 +34,9 @@ const SoundProvider = ({ children }: { children: ReactNode }) => {
   const [soundAudio, setSoundAudio] = useState<Audio.Sound>();
   const [isMuted, setMuted] = useState<boolean>(false);
 
-  // Load the sound once when the component mounts
+  // Execute once when the component mounts
   useEffect(() => {
+    // Load the sound
     const loadSound = async (): Promise<void> => {
       if (!soundAudio) {
         console.log("Loading Sound");
@@ -45,13 +46,30 @@ const SoundProvider = ({ children }: { children: ReactNode }) => {
         setSoundAudio(sound);
       }
     };
-
     loadSound();
+
+    // Configure audio playback settings
+    const setupAudioMode = async () => {
+      try {
+        await Audio.setAudioModeAsync({
+          playsInSilentModeIOS: true, // Allows sound playback in silent mode
+          staysActiveInBackground: true, // Keeps the sound active when the app runs in the background
+          // interruptionModeAndroid: 1, // Do not mix sounds with other audio sources
+          // interruptionModeIOS: 1,
+        });
+        console.log("setupAudioMode");
+      } catch (error) {
+        console.log("Error while setting audio mode\n", error);
+      }
+    };
+    setupAudioMode();
 
     // Cleanup Function
     return () => {
-      console.log("Unloading Sound");
-      soundAudio?.unloadAsync();
+      soundAudio?.unloadAsync().then(() => {
+        setSoundAudio(undefined); // Clear the state to ensure it reloads if needed
+        console.log("Unloading Sound");
+      });
     };
   }, []);
 
