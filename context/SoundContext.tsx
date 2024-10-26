@@ -32,7 +32,7 @@ export const useSoundContext = () => {
 // ---- 4. A Provider komponens definiálása, amely a Context értékeit biztosítja ----
 const SoundProvider = ({ children }: { children: ReactNode }) => {
   const [soundAudio, setSoundAudio] = useState<Audio.Sound>();
-  const [isMuted, setMuted] = useState<boolean>(false);
+  const [isMuted, setMuted] = useState<boolean>(true);
 
   // Execute once when the component mounts
   useEffect(() => {

@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { Stack, SplashScreen } from "expo-router";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
+import * as NavigationBar from "expo-navigation-bar";
+import { useKeepAwake } from "expo-keep-awake";
 import { Colors } from "@/constants/Colors";
 import SoundProvider from "@/context/SoundContext";
 import TimerProvider from "@/context/TimerContext";
@@ -14,9 +16,13 @@ const RootLayout = () => {
     "Inconsolata-Regular": require("../assets/fonts/Inconsolata-Regular.ttf"),
   });
 
+  useKeepAwake(); // Prevents the screen from sleeping
+
   useEffect(() => {
     if (error) console.log(error);
     if (loaded) SplashScreen.hideAsync();
+
+    NavigationBar.setBackgroundColorAsync("#000000"); // Sets the background color of the navigation bar
   }, [loaded, error]);
 
   if (!loaded) {
