@@ -9,18 +9,21 @@ import ControlButtonGroup from "./ControlButtonGroup";
 interface CustomInputProps {
   placeholder: string;
   setValue: Dispatch<SetStateAction<number>>;
+  maxValue: number;
 }
 
-const CustomInput = ({ placeholder, setValue }: CustomInputProps) => {
+const CustomInput = ({ placeholder, setValue, maxValue }: CustomInputProps) => {
   const inputSize: number = moderateScale(76);
+  const [inputText, setInputText] = useState<string>("");
 
   const validateAndSetValue = (text: string) => {
     let numericValue = Number(text); // if text isn't valid, numericValue will be NaN
-    if (numericValue > 99) numericValue = 99;
-    // if (placeholder === "MM" || placeholder === "SS") {
-    //   if (numericValue > 59) numericValue = 59;
-    // }
+
+    if (isNaN(numericValue) || numericValue < 0) return; // If the value is invalid, return
+    if (numericValue > maxValue) numericValue = maxValue; // If the value exceeds the maximum permitted, set maxValue
+
     setValue(numericValue || 0);
+    setInputText(numericValue.toString());
   };
 
   return (
@@ -31,11 +34,14 @@ const CustomInput = ({ placeholder, setValue }: CustomInputProps) => {
         width: inputSize,
         height: inputSize,
       }}
+      selectionColor={Colors.fadedForeground}
+      cursorColor={Colors.primaryForeground}
       placeholderTextColor={Colors.fadedForeground}
       placeholder={placeholder}
       keyboardType="numeric"
       maxLength={2} // Limits the input to 2 characters
       onChangeText={(text) => validateAndSetValue(text)} // setValue(Number(text) || 0)
+      value={inputText}
     />
   );
 };
@@ -62,11 +68,11 @@ const TimeInput = () => {
   return (
     <>
       <View className="flex-row items-center justify-center">
-        <CustomInput placeholder="HH" setValue={setHours} />
+        <CustomInput placeholder="HH" setValue={setHours} maxValue={99} />
         <TimeText>:</TimeText>
-        <CustomInput placeholder="MM" setValue={setMinutes} />
+        <CustomInput placeholder="MM" setValue={setMinutes} maxValue={59} />
         <TimeText>:</TimeText>
-        <CustomInput placeholder="SS" setValue={setSeconds} />
+        <CustomInput placeholder="SS" setValue={setSeconds} maxValue={59} />
       </View>
       <ControlButtonGroup
         cancelTitle="Cancel"
