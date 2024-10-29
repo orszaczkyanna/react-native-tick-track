@@ -1,50 +1,70 @@
-# Welcome to your Expo app 👋
+# Tick & Track
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native app for mobile devices, featuring a clock, stopwatch, and timer. The app makes a ticking sound every second unless muted, which can be useful for various activities such as workouts, stretching, breathing exercises, music practice, and rhythm training.
 
-## Get started
+![preview image of the app](preview.png)
 
-1. Install dependencies
+## Features
 
-   ```bash
-   npm install
-   ```
+- **Clock**: Shows the current time
+- **Stopwatch**: Tracks elapsed time with options to start, pause, and reset
+- **Timer**: Sets a countdown with start, pause, and reset controls
+- Mute Toggle: Easily turns the ticking sound on and off
 
-2. Start the app
+## User Installation
 
-   ```bash
-    npx expo start
-   ```
+### Android
 
-In the output, you'll find options to open the app in a
+1. Go to the [Releases](https://github.com/orszaczkyanna/react-native-tick-track/releases) page
+2. Download the `Tick-Track-x.y.z.zip` file to your Android device from the **Assets** section of the latest release
+3. Unzip the downloaded file
+4. Run the `.apk` file to install the application
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Technologies Used
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **React Native**: Framework for building native mobile applications using React
+- **Expo**: Open-source platform for building and deploying universal apps for Android, iOS, and the web with minimal native configuration
+- **TypeScript**: Strongly typed programming language that builds on JavaScript
+- **NativeWind**: Tailwind CSS for React Native, offering utility-first styling for mobile apps
 
-## Get a fresh project
+## Developer Installation
 
-When you're ready, run:
+1. Clone the repository
 
-```bash
-npm run reset-project
+```
+    git clone https://github.com/orszaczkyanna/react-native-tick-track.git
+    cd react-native-tick-track
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Install dependencies (make sure you have Node.js)
 
-## Learn more
+```
+    npm install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+3. Set up an emulator or use a physical device
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- **For Android**: Use [Android Studio](https://developer.android.com/studio) to set up a virtual device, or run the app on a physical device with [Expo Go](https://expo.dev/go)
+- **For iOS**: Use [Xcode](https://developer.apple.com/xcode/) to create a simulator, or run the app on a physical device using [Expo Go](https://expo.dev/go)
 
-## Join the community
+4. Start the application for the first time
 
-Join our community of developers creating universal apps.
+```
+   npx expo start -c
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- **For Android**: press `a` to open the app
+- **For iOS**: press `i` to open the app
+
+5. Start the application afterwards
+
+- **For Android**: `npm run android`
+- **For iOS**: `npm run ios`
+
+## Credits
+
+- [React Native](https://reactnative.dev/)
+- [Expo](https://docs.expo.dev/), [Expo AV](https://docs.expo.dev/versions/latest/sdk/av/), [Expo Vector Icons](https://icons.expo.fyi/)
+- [React Navigation](https://reactnavigation.org/)
+- [NativeWind](https://www.nativewind.dev/), [Tailwind CSS](https://tailwindcss.com/)
+- [VS Code](https://code.visualstudio.com/), [Android Studio](https://developer.android.com/studio)
